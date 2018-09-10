@@ -429,13 +429,16 @@ def extract_position_data(video_filename, cm_to_pixels=1.0, colors=_COLORS):
                     centroids, frame_rate, frame_size, n_frames)
 
 
-def position_dataframe(position):
+def position_dataframe(position, start_time=0.0):
     head_direction = np.arctan2(
         np.diff(position.head_orientation_mean[:, [3, 9]], axis=1),
         np.diff(position.head_orientation_mean[:, [0, 6]], axis=1))
 
+    n_time = position.head_position_mean.shape[0]
+    time = pd.Index(start_time + (np.arange(n_time) / position.frame_rate),
+                    name='time')
     position_info = pd.DataFrame(position.head_position_mean,
-                                 columns=STATE_NAMES)
+                                 columns=STATE_NAMES, index=time)
     position_info['head_direction'] = head_direction
     position_info['speed'] = np.sqrt(
         position_info.x_velocity ** 2 + position_info.y_velocity ** 2)
@@ -544,7 +547,7 @@ if __name__ == '__main__':
         print(f'Processing {video_filename}')
         position = extract_position_data(
             video_filename, config['cm_to_pixels'])
-        position_info = position_dataframe(position)
+        position_info = position_dataframe(position, start_time=0.0)
         save_data = convert_to_loren_frank_data_format(
             position_info, config['cm_to_pixels'])
         epoch_key = video_filename_to_epoch_key(
