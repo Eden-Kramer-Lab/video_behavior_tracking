@@ -1,0 +1,15 @@
+name: video_behavior_tracking
+channels:
+- conda-forge
+- defaults
+dependencies:
+- "python >= 3.6"
+- numpy
+- scipy
+- pandas
+- opencv
+- tqdm
+- setuptools
+- "pytest >= 2.7.1"
+- pytest-cov
+- coveralls
