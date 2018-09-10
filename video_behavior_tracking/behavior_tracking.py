@@ -87,21 +87,38 @@ def find_color_centroid(frame, min_color=(0, 0, 0), max_color=(180, 255, 255),
 
 def detect_LEDs(video_filename, colors=_COLORS):
     video = cv2.VideoCapture(video_filename)
-    frame_size = (int(video.get(3)), int(video.get(4)))
-    frame_rate = video.get(5)
-    # n_frames = int(video.get(7))
-    n_frames = 100
+    frame_size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                  int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    frame_rate = video.get(cv2.CAP_PROP_FPS)
+    n_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    centroids = {color: np.full((n_frames, 2), np.nan) for color in colors}
+    if n_frames > 0:
+        centroids = {color: np.full((n_frames, 2), np.nan) for color in colors}
 
-    for frame_ind in tqdm(np.arange(n_frames - 1), desc='centroids'):
-        is_grabbed, frame = video.read()
-        if is_grabbed:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        for frame_ind in tqdm(np.arange(n_frames - 1), desc='frames'):
+            is_grabbed, frame = video.read()
+            if is_grabbed:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            for color, kwargs in colors.items():
-                centroids[color][frame_ind] = find_color_centroid(
-                    frame, **kwargs)
+                for color, kwargs in colors.items():
+                    centroids[color][frame_ind] = find_color_centroid(
+                        frame, **kwargs)
+    else:
+        centroids = {color: [] for color in colors}
+        n_frames = 0
+        pbar = tqdm(total=40000, desc='frames',
+                    bar_format='{n_fmt} [{elapsed}<{remaining}]')
+        while True:
+            is_grabbed, frame = video.read()
+            if is_grabbed:
+                pbar.update(1)
+                n_frames += 1
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                for color, kwargs in colors.items():
+                    centroids[color].append(find_color_centroid(
+                        frame, **kwargs))
+        centroids = {color: np.array(data)
+                     for color, data in centroids.items()}
 
     video.release()
     cv2.destroyAllWindows()
