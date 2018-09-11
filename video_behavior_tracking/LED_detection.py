@@ -99,6 +99,8 @@ def detect_LEDs(video_filename, colors=_COLORS):
                 for color, kwargs in colors.items():
                     centroids[color].append(find_color_centroid(
                         frame, **kwargs))
+            else:
+                break
         centroids = {color: np.array(data)
                      for color, data in centroids.items()}
 
