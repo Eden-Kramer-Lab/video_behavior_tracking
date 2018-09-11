@@ -2,7 +2,8 @@
 
 from setuptools import find_packages, setup
 
-INSTALL_REQUIRES = ['numpy >= 1.11', 'scipy', 'pandas', 'opencv', 'tqdm']
+INSTALL_REQUIRES = ['numpy >= 1.11', 'scipy', 'pandas', 'opencv-python',
+                    'tqdm']
 TESTS_REQUIRE = ['pytest >= 2.7.1']
 
 setup(
@@ -16,4 +17,9 @@ setup(
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
     tests_require=TESTS_REQUIRE,
+    entry_points={
+        'console_scripts': [
+            'track_behavior = video_behavior_tracking.track_behavior:main',
+        ],
+    },
 )
