@@ -1,3 +1,4 @@
+import warnings
 from collections import namedtuple
 
 import numpy as np
@@ -161,12 +162,13 @@ def make_head_position_model(centroids, frame_rate, measurement_variance=1E-4,
 
     # Observation covariance
     measurement_covariance = np.eye(4) * measurement_variance
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        initial_x = np.nanmean(data[:, [0, 2]], axis=1)
+        initial_x = initial_x[np.nonzero(~np.isnan(initial_x))[0][0]]
 
-    initial_x = np.nanmean(data[:, [0, 2]], axis=1)
-    initial_x = initial_x[np.nonzero(~np.isnan(initial_x))[0][0]]
-
-    initial_y = np.nanmean(data[:, [1, 3]], axis=1)
-    initial_y = initial_y[np.nonzero(~np.isnan(initial_y))[0][0]]
+        initial_y = np.nanmean(data[:, [1, 3]], axis=1)
+        initial_y = initial_y[np.nonzero(~np.isnan(initial_y))[0][0]]
 
     prior_state = np.array([initial_x, 0, 0, initial_y, 0, 0])
     prior_covariance = np.diag([1, 250, 6000, 1, 250, 6000])
