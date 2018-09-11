@@ -26,7 +26,7 @@ def make_video(video_filename, centroids, head_position_mean,
     RGB_WHITE = (255, 255, 255)
 
     video = cv2.VideoCapture(video_filename)
-    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     frame_size = (int(video.get(3)), int(video.get(4)))
     frame_rate = video.get(5)
     n_frames = int(head_orientation_mean.shape[0])
