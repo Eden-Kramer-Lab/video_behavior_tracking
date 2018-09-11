@@ -56,3 +56,7 @@ This file has two variables.
 
 + `--save_path SAVE_PATH` can be added to save the
 + `--save_video` can be added to create a video file with the estimated head position and direction imposed on the original video.
+
+
+#### Development Note
+In order to release to conda, after `conda skeleton` command, need change package in `meta.yml` from `opencv-python` to `opencv`.
