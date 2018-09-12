@@ -1,3 +1,4 @@
+import json
 import os.path
 
 import numpy as np
@@ -182,8 +183,23 @@ def convert_to_pixels(data, frame_size, cm_to_pixels=1.0):
     return flip_y(data / cm_to_pixels, frame_size)
 
 
-def write_config():
-    pass
+def write_config(date_to_day, cm_to_pixels):
+    '''Writes a json config file.
+
+    Parameters
+    ----------
+    date_to_day : dict
+        Coverts from recording date to day
+    cm_to_pixels : float
+
+    '''
+    data = {'date_to_day': date_to_day,
+            'cm_to_pixels':  cm_to_pixels}
+    with open('position_config.json', 'w') as outfile:
+        json.dump(data, outfile, sort_keys=True, indent=4,
+                  ensure_ascii=False)
+
+
 def adjust_time(position_filename):
     '''Make sure each successive epoch starts five minutes after the last epoch.
 
