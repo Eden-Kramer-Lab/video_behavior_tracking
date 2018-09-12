@@ -15,7 +15,7 @@ Because the LEDs can be occluded due to recording equipment wires or the animal 
 
 
 
-#### Installation
+## Installation
 ```
 pip install video_behavior_tracking
 ```
@@ -26,7 +26,7 @@ OR
 conda install -c edeno video_behavior_tracking
 ```
 
-#### Usage
+## Usage
 
 The easiest way to use this package is in the command line via the `track_behavior` function. It will output a `<animal>pos<day>.mat` file in the [Loren Frank data format](https://github.com/Eden-Kramer-Lab/Loren-Frank-Data-Format--Description/wiki/Position-Information).
 
@@ -63,11 +63,11 @@ This file has two variables.
 + `date_to_day` -- in order to convert date of the video recording to day of recording.
 
 
-#### Optional flags
+### Optional flags
 
 + `--save_path SAVE_PATH` can be added to save the
 + `--save_video` can be added to create a video file with the estimated head position and direction imposed on the original video.
 
 
-#### Development Note
+## Development Note
 In order to release to conda, after `conda skeleton` command, need change package in `meta.yml` from `opencv-python` to `opencv`.
