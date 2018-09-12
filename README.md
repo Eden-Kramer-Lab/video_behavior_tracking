@@ -31,7 +31,7 @@ conda install -c edeno video_behavior_tracking
 Steps
 1. Create a `config.json` file
 2. Run `track_behavior` to extract the data
-3. Run `adjust_time` to correct the epoch time
+3. Run `adjust_time` on the `pos` files to correct the epoch time.
 
 `track_behavior` is a script that runs via the command line. It will output a `<animal>pos<day>.mat` file in the [Loren Frank data format](https://github.com/Eden-Kramer-Lab/Loren-Frank-Data-Format--Description/wiki/Position-Information).
 
