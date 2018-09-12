@@ -77,4 +77,4 @@ The function `video_behavior_tracking.utils.adjust_time` will have to be run aft
 
 
 ## Development Note
-In order to release to conda, after `conda skeleton` command, need change package in `meta.yml` from `opencv-python` to `opencv`.
+In order to release to conda, after `conda skeleton` command, need to change the package in `meta.yml` from `opencv-python` to `opencv`.
