@@ -71,9 +71,8 @@ def kalman_filter(data, state_transition, state_to_observed,
         # Predict
         prior_mean = state_transition @ posterior_mean[time_ind - 1]
         prior_covariance = (
-            state_transition @ posterior_covariance[time_ind -
-                                                    1] @ state_transition.T
-            + state_covariance)
+            state_transition @ posterior_covariance[time_ind - 1] @
+            state_transition.T + state_covariance)
 
         # Update
         system_uncertainty = (
@@ -84,8 +83,8 @@ def kalman_filter(data, state_transition, state_to_observed,
         # prediction uncertainty vs. measurement uncertainty
         kalman_gain = prior_covariance @ state_to_observed.T @ inverse(
             system_uncertainty)
-        prediction_error = data[time_ind] - \
-            state_to_observed @ prior_mean  # innovation
+        # innovation
+        prediction_error = (data[time_ind] - state_to_observed @ prior_mean)
 
         # Handle missing data by not updating the estimate and covariance
         is_missing = np.isnan(data[time_ind])

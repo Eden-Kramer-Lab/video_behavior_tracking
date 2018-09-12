@@ -1,6 +1,5 @@
-import numpy as np
-
 import cv2
+import numpy as np
 
 from .utils import convert_to_pixels
 
