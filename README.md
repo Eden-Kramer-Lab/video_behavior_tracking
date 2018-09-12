@@ -28,13 +28,18 @@ conda install -c edeno video_behavior_tracking
 
 ## Usage
 
-The easiest way to use this package is in the command line via the `track_behavior` function. It will output a `<animal>pos<day>.mat` file in the [Loren Frank data format](https://github.com/Eden-Kramer-Lab/Loren-Frank-Data-Format--Description/wiki/Position-Information).
+Steps
+1. Create a `config.json` file
+2. Run `track_behavior` to extract the data
+3. Run `adjust_time` to correct the epoch time
+
+`track_behavior` is a script that runs via the command line. It will output a `<animal>pos<day>.mat` file in the [Loren Frank data format](https://github.com/Eden-Kramer-Lab/Loren-Frank-Data-Format--Description/wiki/Position-Information).
 
 ```bash
 track_behavior VIDEO_FILENAME_PATH CONFIG_FILE_PATH
 ```
 
-Two elements are needed to run the function:
+Two elements are needed to run `track_behavior`:
 
 + VIDEO_FILENAME_PATH -- path to the video file. The video file is expected to be in the following format:
   `<date>_<animal>_<epoch>.<optional_flag_depending_on_preprocessing>.<file_format>`
@@ -62,7 +67,7 @@ This file has two variables.
 + `cm_to_pixels` -- the ratio of centimeters to pixels.
 + `date_to_day` -- in order to convert date of the video recording to day of recording.
 
-Also note that the function `video_behavior_tracking.utils.adjust_time` will have to be run after processing the files to make sure each epoch starts five minutes after the last.
+The function `video_behavior_tracking.utils.adjust_time` will have to be run after processing the files to make sure each epoch starts five minutes after the last.
 
 
 ### Optional flags
