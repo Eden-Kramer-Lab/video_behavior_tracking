@@ -4,7 +4,8 @@ This python package provides scripts and functions for extracting behavioral dat
 
 Animal behavior is tracked via an overhead video camera and red and green LEDs mounted on the head of the animal. Standard image processing techniques (color thresholding, gaussian blurring, dilation and erosion) are used to extract the position of the LEDS in the video.
 
-![image processing example](image_processing.png)
+
+<img src="image_processing.png" width="300">
 
 Because the LEDs can be occluded due to recording equipment wires or the animal tilting its head down, Kalman filtering and smoothing is used to impute data missing from occlusions, extract variables not directly observed (`velocity`, `acceleration`) and take advantage of multiple sensors.
 
