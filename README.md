@@ -41,7 +41,7 @@ Two elements are needed to run the function:
 
   where `file_format` can be `.h264`, `.avi`, `.mp4`
 
-+ CONFIG_FILE_PATH -- a path to a simple `.json` configuration file.
++ CONFIG_FILE_PATH -- a path to a simple `.json` configuration file. The function `video_behavior_tracking.utils.write_config` can be used to put the data in the proper format. An example of the format is below.
 
 ```json
 {
