@@ -62,6 +62,8 @@ This file has two variables.
 + `cm_to_pixels` -- the ratio of centimeters to pixels.
 + `date_to_day` -- in order to convert date of the video recording to day of recording.
 
+Also note that the function `video_behavior_tracking.utils.adjust_time` will have to be run after processing the files to make sure each epoch starts five minutes after the last.
+
 
 ### Optional flags
 
