@@ -184,3 +184,31 @@ def convert_to_pixels(data, frame_size, cm_to_pixels=1.0):
 
 def write_config():
     pass
+def adjust_time(position_filename):
+    '''Make sure each successive epoch starts five minutes after the last epoch.
+
+    Parameters
+    ----------
+    position_filename : str
+
+    '''
+    FIVE_MINUTES = 300
+    TIME_IND = 0
+    animal, day = (position_filename.split(os.sep)[-1]
+                   .strip('.mat').split('pos'))
+    day = int(day)
+    position_file = loadmat(position_filename)
+    position_data = position_file['pos'][0, day - 1]
+
+    for epoch_ind, epoch in enumerate(position_data.squeeze()):
+        current_epoch_time = epoch['data'][0, 0][:, TIME_IND].copy()
+        current_epoch_time -= current_epoch_time[0]
+        previous_epoch_time = position_data[
+            0, epoch_ind - 1]['data'][0, 0][:, TIME_IND]
+
+        if epoch_ind != 0:
+            new_epoch_time_start = previous_epoch_time[-1] + FIVE_MINUTES
+            position_data[0, epoch_ind]['data'][0, 0][:, TIME_IND] = (
+                current_epoch_time + new_epoch_time_start)
+
+    savemat(position_filename, position_file)
