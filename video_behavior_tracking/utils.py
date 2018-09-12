@@ -1,4 +1,5 @@
 import os.path
+
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat, savemat
@@ -8,6 +9,19 @@ STATE_NAMES = ['x_position', 'x_velocity', 'x_acceleration',
 
 
 def position_dataframe(position, start_time=0.0):
+    '''Takes kalman filter data, computes head direction/speed/acceleration and
+    puts it in a pandas DataFrame.
+
+    Parameters
+    ----------
+    position : namedtuple
+    start_time : float
+
+    Returns
+    -------
+    position_info : DataFrame
+
+    '''
     head_direction = np.arctan2(
         np.diff(position.head_orientation_mean[:, [3, 9]], axis=1),
         np.diff(position.head_orientation_mean[:, [0, 6]], axis=1))
@@ -27,6 +41,19 @@ def position_dataframe(position, start_time=0.0):
 
 
 def convert_to_loren_frank_data_format(position_info, cm_to_pixels=1.0):
+    '''Converts the pandas DataFrame from the function `position_dataframe` to
+    the Loren Frank data format.
+
+    Parameters
+    ----------
+    position_info : DataFrame
+    cm_to_pixels : float
+
+    Returns
+    -------
+    formatted_data : dict
+
+    '''
     LOREN_FRANK_NAMES = {
         'time': 'time',
         'x_position': 'x',
@@ -101,7 +128,18 @@ def save_loren_frank_data(epoch_key, file_type, save_data, n_epochs=None,
 
 
 def flip_y(data, frame_size):
-    '''Flips the y-axis'''
+    '''Flips the y-axis
+
+    Parameters
+    ----------
+    data : ndarray, shape (n_time, 2)
+    frame_size : array_like, shape (2,)
+
+    Returns
+    -------
+    flipped_data : ndarray, shape (n_time, 2)
+
+    '''
     new_data = data.copy()
     if data.ndim > 1:
         new_data[:, 1] = frame_size[1] - new_data[:, 1]
@@ -111,7 +149,7 @@ def flip_y(data, frame_size):
 
 
 def convert_to_cm(data, frame_size, cm_to_pixels=1.0):
-    '''
+    '''Converts from pixels to cm and flips the y-axis.
 
     Parameters
     ----------
@@ -121,13 +159,26 @@ def convert_to_cm(data, frame_size, cm_to_pixels=1.0):
 
     Returns
     -------
-    data : ndarray, shape (n_time, 2)
+    converted_data : ndarray, shape (n_time, 2)
 
     '''
     return flip_y(data, frame_size) * cm_to_pixels
 
 
 def convert_to_pixels(data, frame_size, cm_to_pixels=1.0):
+    '''Converts from cm to pixels and flips the y-axis.
+
+    Parameters
+    ----------
+    data : ndarray, shape (n_time, 2)
+    frame_size : array_like, shape (2,)
+    cm_to_pixels : float
+
+    Returns
+    -------
+    converted_data : ndarray, shape (n_time, 2)
+
+    '''
     return flip_y(data / cm_to_pixels, frame_size)
 
 
