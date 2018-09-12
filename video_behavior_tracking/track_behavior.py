@@ -17,7 +17,7 @@ def main(args=None):
                         help='Path to save file directory')
     parser.add_argument('--save_video', action='store_true',
                         help='Save video containing extracted position')
-    parser.add_argument('--diable_progress_bar', action='store_true',
+    parser.add_argument('--disable_progress_bar', action='store_true',
                         help='Disables the progress bar')
 
     args = parser.parse_args(args)
