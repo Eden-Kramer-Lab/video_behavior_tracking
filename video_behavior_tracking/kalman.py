@@ -27,7 +27,8 @@ Position = namedtuple(
 
 def kalman_filter(data, state_transition, state_to_observed,
                   state_covariance, measurement_covariance,
-                  prior_state, prior_covariance, inverse=np.linalg.inv):
+                  prior_state, prior_covariance, inverse=np.linalg.inv,
+                  disable_progressbar=False):
     '''Handles missing observations
 
     Code modified from https://github.com/rlabbe/filterpy
@@ -65,7 +66,8 @@ def kalman_filter(data, state_transition, state_to_observed,
 
     identity = np.eye(n_states)
 
-    for time_ind in tqdm(np.arange(1, n_time), desc='kalman filter'):
+    for time_ind in tqdm(np.arange(1, n_time), desc='kalman filter',
+                         disable=disable_progressbar):
         # Predict
         prior_mean = state_transition @ posterior_mean[time_ind - 1]
         prior_covariance = (
@@ -103,7 +105,8 @@ def kalman_filter(data, state_transition, state_to_observed,
 
 
 def rts_smoother(posterior_mean, posterior_covariance, state_transition,
-                 state_covariance, inverse=np.linalg.inv):
+                 state_covariance, inverse=np.linalg.inv,
+                 disable_progressbar=False):
     '''Runs the Rauch-Tung-Striebal Kalman smoother on a set of
     means and covariances computed by a Kalman filter.
 
@@ -127,7 +130,8 @@ def rts_smoother(posterior_mean, posterior_covariance, state_transition,
     smoothed_mean = posterior_mean.copy()
     smoothed_covariances = posterior_covariance.copy()
 
-    for time_ind in tqdm(np.arange(n_time - 2, -1, -1), desc='smoothing'):
+    for time_ind in tqdm(np.arange(n_time - 2, -1, -1), desc='smoothing',
+                         disable=disable_progressbar):
         prior_covariance = (state_transition @ posterior_covariance[time_ind] @
                             state_transition.T + state_covariance)
         smoother_gain = (posterior_covariance[time_ind] @ state_transition.T @
@@ -221,27 +225,28 @@ def make_head_orientation_model(centroids, frame_rate,
             'prior_covariance': prior_covariance}
 
 
-def filter_smooth_data(model):
-    posterior_mean, posterior_covariance = kalman_filter(**model)
+def filter_smooth_data(model, disable_progressbar):
+    posterior_mean, posterior_covariance = kalman_filter(
+        **model, disable_progressbar=disable_progressbar)
     posterior_mean, posterior_covariance = rts_smoother(
         posterior_mean, posterior_covariance, model['state_transition'],
-        model['state_covariance'])
+        model['state_covariance'], disable_progressbar=disable_progressbar)
 
     return posterior_mean, posterior_covariance
 
 
 def extract_position_data(centroids, frame_rate, frame_size, n_frames,
-                          cm_to_pixels):
+                          cm_to_pixels, disable_progressbar=False):
     centroids = {color: convert_to_cm(data, frame_size, cm_to_pixels)
                  for color, data in centroids.items()}
 
     head_position_model = make_head_position_model(centroids, frame_rate)
     head_position_mean, head_position_covariance = filter_smooth_data(
-        head_position_model)
+        head_position_model, disable_progressbar=disable_progressbar)
 
     head_orientation_model = make_head_orientation_model(centroids, frame_rate)
     head_orientation_mean, head_orientation_covariance = filter_smooth_data(
-        head_orientation_model)
+        head_orientation_model, disable_progressbar=disable_progressbar)
 
     return Position(head_position_mean, head_position_covariance,
                     head_orientation_mean, head_orientation_covariance,

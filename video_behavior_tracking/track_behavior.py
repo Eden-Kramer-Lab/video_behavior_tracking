@@ -17,6 +17,8 @@ def main(args=None):
                         help='Path to save file directory')
     parser.add_argument('--save_video', action='store_true',
                         help='Save video containing extracted position')
+    parser.add_argument('--diable_progress_bar', action='store_true',
+                        help='Disables the progress bar')
 
     args = parser.parse_args(args)
 
@@ -26,10 +28,11 @@ def main(args=None):
     for video_filename in glob.glob(args.video_filename):
         print(f'\nProcessing {video_filename}')
         centroids, frame_rate, frame_size, n_frames = detect_LEDs(
-            video_filename)
+            video_filename, disable_progressbar=args.disable_progressbar)
         position = extract_position_data(
             centroids, frame_rate, frame_size, n_frames,
-            config['cm_to_pixels'])
+            config['cm_to_pixels'],
+            disable_progressbar=args.disable_progressbar)
         position_info = position_dataframe(position, start_time=0.0)
         save_data = convert_to_loren_frank_data_format(
             position_info, config['cm_to_pixels'])
@@ -45,4 +48,5 @@ def main(args=None):
                        position.head_position_mean,
                        position.head_orientation_mean,
                        output_video_filename=output_video_filename,
-                       cm_to_pixels=config['cm_to_pixels'])
+                       cm_to_pixels=config['cm_to_pixels'],
+                       disable_progressbar=args.disable_progressbar)

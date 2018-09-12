@@ -67,7 +67,7 @@ def find_color_centroid(frame, min_color=(0, 0, 0), max_color=(180, 255, 255),
         return (np.nan, np.nan)
 
 
-def detect_LEDs(video_filename, colors=_COLORS):
+def detect_LEDs(video_filename, colors=_COLORS, disable_progressbar=False):
     video = cv2.VideoCapture(video_filename)
     frame_size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)),
                   int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
@@ -89,7 +89,8 @@ def detect_LEDs(video_filename, colors=_COLORS):
         centroids = {color: [] for color in colors}
         n_frames = 0
         pbar = tqdm(total=40000, desc='frames',
-                    bar_format='{n_fmt} [{elapsed}<{remaining}]')
+                    bar_format='{n_fmt} [{elapsed}<{remaining}]',
+                    disable=disable_progressbar)
         while True:
             is_grabbed, frame = video.read()
             if is_grabbed:
