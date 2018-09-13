@@ -1,12 +1,15 @@
 import glob
 import json
 from argparse import ArgumentParser
+from logging import getLogger
 
 from video_behavior_tracking import (convert_to_loren_frank_data_format,
                                      detect_LEDs, extract_position_data,
                                      make_video, position_dataframe,
                                      save_loren_frank_data,
                                      video_filename_to_epoch_key)
+
+logger = getLogger(__name__)
 
 
 def main(args=None):
@@ -26,13 +29,16 @@ def main(args=None):
         config = json.load(data_file)
 
     for video_filename in glob.glob(args.video_filename):
-        print(f'\nProcessing {video_filename}')
+        logger.info(f'\nProcessing {video_filename}')
+        logger.info('\t.Detecting LED positions...')
         centroids, frame_rate, frame_size, n_frames = detect_LEDs(
             video_filename, disable_progressbar=args.disable_progressbar)
+        logger.info('\tFiltering and smoothing data...')
         position = extract_position_data(
             centroids, frame_rate, frame_size, n_frames,
             config['cm_to_pixels'],
             disable_progressbar=args.disable_progressbar)
+        logger.info('\tSaving data...')
         position_info = position_dataframe(position, start_time=0.0)
         save_data = convert_to_loren_frank_data_format(
             position_info, config['cm_to_pixels'])
@@ -42,6 +48,7 @@ def main(args=None):
                               save_path=args.save_path)
 
         if args.save_video:
+            logger.info('\tSaving video...')
             animal, day, epoch = epoch_key
             output_video_filename = f'{animal}_{day:02}_{epoch:02}_pos.avi'
             make_video(video_filename, position.centroids,

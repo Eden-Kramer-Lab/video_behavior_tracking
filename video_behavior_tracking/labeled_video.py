@@ -36,7 +36,7 @@ def make_video(video_filename, centroids, head_position_mean,
     centroids = {color: convert_to_pixels(data, frame_size, cm_to_pixels)
                  for color, data in centroids.items()}
 
-    for time_ind in tqdm(range(n_frames - 1), desc='making video',
+    for time_ind in tqdm(range(n_frames - 1), desc='frames',
                          disable=disable_progressbar):
         is_grabbed, frame = video.read()
         if is_grabbed:

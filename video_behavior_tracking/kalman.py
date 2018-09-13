@@ -66,7 +66,7 @@ def kalman_filter(data, state_transition, state_to_observed,
 
     identity = np.eye(n_states)
 
-    for time_ind in tqdm(np.arange(1, n_time), desc='kalman filter',
+    for time_ind in tqdm(np.arange(1, n_time), desc='frames',
                          disable=disable_progressbar):
         # Predict
         prior_mean = state_transition @ posterior_mean[time_ind - 1]
@@ -129,7 +129,7 @@ def rts_smoother(posterior_mean, posterior_covariance, state_transition,
     smoothed_mean = posterior_mean.copy()
     smoothed_covariances = posterior_covariance.copy()
 
-    for time_ind in tqdm(np.arange(n_time - 2, -1, -1), desc='smoothing',
+    for time_ind in tqdm(np.arange(n_time - 2, -1, -1), desc='frames',
                          disable=disable_progressbar):
         prior_covariance = (state_transition @ posterior_covariance[time_ind] @
                             state_transition.T + state_covariance)
