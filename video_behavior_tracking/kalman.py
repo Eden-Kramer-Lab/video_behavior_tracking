@@ -145,7 +145,7 @@ def rts_smoother(posterior_mean, posterior_covariance, state_transition,
     return smoothed_mean, smoothed_covariances
 
 
-def make_head_position_model(centroids, frame_rate, measurement_variance=1E-4,
+def make_head_position_model(centroids, frame_rate, measurement_variance=1E-1,
                              process_variance=5):
     data = np.concatenate((centroids['red'], centroids['green']), axis=1)
     dt = 1 / frame_rate
@@ -186,7 +186,7 @@ def make_head_position_model(centroids, frame_rate, measurement_variance=1E-4,
 
 
 def make_head_orientation_model(centroids, frame_rate,
-                                measurement_variance=1E-4, process_variance=5):
+                                measurement_variance=1E-1, process_variance=5):
     data = np.concatenate((centroids['red'], centroids['green']), axis=1)
     dt = 1 / frame_rate
 
