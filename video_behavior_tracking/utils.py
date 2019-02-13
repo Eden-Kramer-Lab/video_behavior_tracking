@@ -79,8 +79,8 @@ def convert_to_loren_frank_data_format(position_info, cm_to_pixels=1.0):
 
 
 def video_filename_to_epoch_key(video_filename, date_to_day):
-    date, animal, epoch = (video_filename.split('/')[-1]
-                           .split('.')[0].split('_'))
+    date, animal, epoch = (os.path.basename(video_filename)
+                           .split('.')[0].split('_')[:3])
     epoch = int(epoch)
     day = date_to_day[date]
     return animal, day, epoch
