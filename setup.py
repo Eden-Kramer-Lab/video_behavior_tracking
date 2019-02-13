@@ -8,7 +8,7 @@ TESTS_REQUIRE = ['pytest >= 2.7.1']
 
 setup(
     name='video_behavior_tracking',
-    version='0.1.7.dev0',
+    version='0.1.8.dev0',
     license='MIT',
     description=('Extract behavior from video'),
     author='Eric Denovellis',
